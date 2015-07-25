@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:camel="http://camel.apache.org/schema/blueprint"
+	xsi:schemaLocation="
+       http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+       http://camel.apache.org/schema/blueprint http://camel.apache.org/schema/blueprint/camel-blueprint.xsd">
+
+	<bean id="accountClient" class="org.camel.demo.blueprint.ClientDemo" init-method="startUp">
+		<property name="accountService" ref="accountService" />
+	</bean>
+
+	<reference id="accountService" interface="org.camel.demo.blueprint.service.IAccountService" />
+
+	<camel:camelContext>
+		<camel:route>
+			<camel:from uri="direct:start" />
+			<camel:log message="Camel Client Context Started" />
+			<camel:to uri="bean:accountClient" />
+			<camel:log message="The message contains : ${header.operationName} "/>
+		</camel:route>
+	</camel:camelContext>
+
+</blueprint>
